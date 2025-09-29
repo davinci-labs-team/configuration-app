@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from "@/router";
 import { ref } from "vue";
 
 const loading = ref(false);
@@ -6,17 +7,14 @@ async function handleLetsGo() {
     loading.value = true;
 
     // Simulate loading/navigation delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Here you would typically navigate to your main app
-    alert("Todo");
-
+    router.push({ name: "configure-home" });
     loading.value = false;
 }
 </script>
 
 <template>
-    <p>test</p>
     <div
         class="w-screen h-screen bg-white flex items-center justify-center relative overflow-hidden"
     >
@@ -28,9 +26,8 @@ async function handleLetsGo() {
             <h1 class="text-6xl font-black text-gray-900 mb-6 tracking-tight">Welcome</h1>
 
             <!-- Subtitle text -->
-            <p class="text-gray-600 text-xl mb-12 leading-relaxed font-medium">
-                Configure your application with ease and precision. Let's get started on your
-                journey.
+            <p class="text-gray-600 text-xl mb-12 leading-relaxed font-medium py-2">
+                Configure your hackaton with ease and precision. Let's get started !
             </p>
 
             <!-- Let's go button -->
@@ -41,7 +38,7 @@ async function handleLetsGo() {
                     color="primary"
                     variant="elevated"
                     rounded="xl"
-                    class="px-16 text-xl font-bold shadow-lg hover:shadow-xl transition-shadow"
+                    class="px-16 text-xl font-bold shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
                     :loading="loading"
                 >
                     Let's Go
