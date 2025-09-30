@@ -90,7 +90,7 @@
                     Ok
                 </v-btn>
                 <v-btn
-                    @click="showContinueModal = false"
+                    @click="handleSaveAndReset"
                     size="x-large"
                     color="danger"
                     variant="elevated"
@@ -102,7 +102,7 @@
                     SAVE & RESET
                 </v-btn>
                 <v-btn
-                    @click="showContinueModal = false"
+                    @click="handleContinue"
                     size="x-large"
                     color="primary"
                     variant="elevated"
@@ -118,6 +118,7 @@
 </template>
 <script setup lang="ts">
 import SupabaseService from "@/code/services/SupabaseService";
+import { useConfigStep } from "@/stores/configStep";
 import { useField, useForm } from "vee-validate";
 import { ref } from "vue";
 
@@ -180,5 +181,12 @@ async function handleSaveAndReset() {
         modalText.value = "Looks like something went wrong, refresh the page and try again.";
         return;
     }
+    const { currentStep, setStep } = useConfigStep();
+    setStep(currentStep + 1); //all good go to next page
 }
+
+const handleContinue = () => {
+    const { currentStep, setStep } = useConfigStep();
+    setStep(currentStep + 1); //all good go to next page
+};
 </script>
