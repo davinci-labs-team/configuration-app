@@ -70,12 +70,7 @@
     </div>
 
     <v-dialog v-model="showContinueModal" width="auto">
-        <v-card
-            max-width="400"
-            prepend-icon="mdi-update"
-            :text="modalText"
-            title="Your attention is needed"
-        >
+        <v-card prepend-icon="mdi-update" :text="modalText" title="Your attention is needed">
             <!-- Before you say anything, I know this is trash but we have a big timing constraint -->
             <template v-slot:actions>
                 <v-btn
@@ -128,6 +123,7 @@ const modalText = ref("");
 const isConnectLoading = ref(false);
 const saveResetLoading = ref(false);
 
+const emit = defineEmits(["stepswitch"]);
 const { handleSubmit } = useForm({
     validationSchema: {
         url(value: string | undefined) {
@@ -164,6 +160,7 @@ const connectService = async () => {
         modalText.value =
             "Looks like you already have some data in your supabase, would you like to save (download) and reset it before continuing ?";
         hasOldData.value = true;
+        showContinueModal.value = true;
         isConnectLoading.value = false;
 
         return;
@@ -181,12 +178,15 @@ async function handleSaveAndReset() {
         modalText.value = "Looks like something went wrong, refresh the page and try again.";
         return;
     }
-    const { currentStep, setStep } = useConfigStep();
-    setStep(currentStep + 1); //all good go to next page
+    const { setStep } = useConfigStep();
+    setStep(1); //all good go to next page
+    emit("stepswitch");
 }
 
 const handleContinue = () => {
     const { currentStep, setStep } = useConfigStep();
-    setStep(currentStep + 1); //all good go to next page
+    setStep(1); //all good go to next page
+    console.log(currentStep);
+    emit("stepswitch");
 };
 </script>

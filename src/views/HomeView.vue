@@ -6,9 +6,6 @@ const loading = ref(false);
 async function handleLetsGo() {
     loading.value = true;
 
-    // Simulate loading/navigation delay
-
-    // Here you would typically navigate to your main app
     router.push({ name: "configure-home" });
     loading.value = false;
 }
