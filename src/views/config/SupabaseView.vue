@@ -165,7 +165,7 @@ const connectService = async () => {
 
         return;
     }
-    showContinueModal.value = true;
+    handleContinue();
     isConnectLoading.value = false;
 };
 
@@ -184,9 +184,8 @@ async function handleSaveAndReset() {
 }
 
 const handleContinue = () => {
-    const { currentStep, setStep } = useConfigStep();
+    const { setStep } = useConfigStep();
     setStep(1); //all good go to next page
-    console.log(currentStep);
     emit("stepswitch");
 };
 </script>

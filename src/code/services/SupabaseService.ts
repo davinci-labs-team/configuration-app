@@ -75,7 +75,7 @@ export default abstract class SupabaseService {
         }
     }
 
-    // Helper to recursively backup all files in a bucket
+    // backup all files in a bucket
     private static async _backupBucketRecursive(
         supabaseClient: SupabaseClient,
         zip: JSZipType,
@@ -84,32 +84,49 @@ export default abstract class SupabaseService {
     ): Promise<void> {
         const { data, error } = await supabaseClient.storage.from(bucket).list(path);
         if (error || !data) return;
-        for (const file of data) {
-            if (file.name && file.id && file.metadata && file.updated_at) {
+
+        // Always create the folder structure in the zip
+        const storageFolder = zip.folder("storage");
+        const bucketFolder = storageFolder ? storageFolder.folder(bucket) : null;
+        const currentFolder = bucketFolder && path ? bucketFolder.folder(path) : bucketFolder;
+
+        for (const item of data) {
+            const itemPath = path ? `${path}/${item.name}` : item.name;
+            // Check if the name has an extension to determine if it's a file
+            if (/\.[^./]+$/.test(item.name)) {
                 // It's a file
-                const filePath = path ? `${path}/${file.name}` : file.name;
                 const { data: fileData, error: fileError } = await supabaseClient.storage
                     .from(bucket)
-                    .download(filePath);
-                if (!fileError && fileData) {
+                    .download(itemPath);
+                if (!fileError && fileData && currentFolder) {
                     const arrBuf = await fileData.arrayBuffer();
-                    const storageFolder = zip.folder("storage");
-                    const bucketFolder = storageFolder ? storageFolder.folder(bucket) : null;
-                    if (bucketFolder) {
-                        bucketFolder.file(filePath, arrBuf);
-                    }
+                    currentFolder.file(item.name, arrBuf);
                 }
-            } else if (file.name && file.id && file.metadata === null) {
+            } else {
                 // It's a folder
-                const folderPath = path ? `${path}/${file.name}` : file.name;
-                await this._backupBucketRecursive(supabaseClient, zip, bucket, folderPath);
+                if (currentFolder) currentFolder.folder(item.name);
+                await this._backupBucketRecursive(supabaseClient, zip, bucket, itemPath);
             }
         }
     }
 
     private static async backupDB(supabaseClient: SupabaseClient, zip: JSZipType): Promise<void> {
         // List of tables to backup.
-        const tables = ["User"];
+        const tables = [
+            "User",
+            "_prisma_migrations",
+            "_TeamJuries",
+            "_TeamMentors",
+            "Announcement",
+            "Comment",
+            "Evaluation",
+            "Faq",
+            "HackathonConfig",
+            "PasswordReset",
+            "Submission",
+            "Team",
+            "Ticket"
+        ];
         for (const table of tables) {
             const { data, error } = await supabaseClient.from(table).select("*");
             if (!error && data) {
@@ -144,10 +161,61 @@ export default abstract class SupabaseService {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             }, 100);
+            await this.resetStorage(supabaseClient);
+            await this.resetTables(supabaseClient);
             return true;
         } catch (e) {
             console.error("Backup failed", e);
             return false;
+        }
+    }
+
+    // delete all files in all storage buckets
+    private static async resetStorage(supabaseClient: SupabaseClient): Promise<void> {
+        const buckets = ["evaluations", "submissions", "users", "annonces"];
+        for (const bucket of buckets) {
+            await this._deleteAllFilesInBucket(supabaseClient, bucket, "");
+        }
+    }
+
+    // recursively delete all files in a bucket
+    private static async _deleteAllFilesInBucket(
+        supabaseClient: SupabaseClient,
+        bucket: string,
+        path: string
+    ): Promise<void> {
+        const { data, error } = await supabaseClient.storage.from(bucket).list(path);
+        if (error || !data) return;
+        for (const item of data) {
+            const itemPath = path ? `${path}/${item.name}` : item.name;
+            if (/\.[^./]+$/.test(item.name)) {
+                // It's a file
+                await supabaseClient.storage.from(bucket).remove([itemPath]);
+            } else {
+                // It's a folder
+                await this._deleteAllFilesInBucket(supabaseClient, bucket, itemPath);
+            }
+        }
+    }
+
+    private static async resetTables(supabaseClient: SupabaseClient): Promise<void> {
+        const tables = [
+            "User",
+            "_prisma_migrations",
+            "_TeamJuries",
+            "_TeamMentors",
+            "Announcement",
+            "Comment",
+            "Evaluation",
+            "Faq",
+            "HackathonConfig",
+            "PasswordReset",
+            "Submission",
+            "Team",
+            "Ticket"
+        ];
+        for (const table of tables) {
+            await supabaseClient.from(table).delete().neq("id", null); // Delete all rows
         }
     }
 }
