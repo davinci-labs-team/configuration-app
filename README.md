@@ -1,5 +1,10 @@
 # configuration-app
 
+## Documentation
+
+- [Deployment Guide](docs/Deployment.md)
+- [Discord Integration Guide](docs/Discord.md)
+
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vite.dev/config/).
