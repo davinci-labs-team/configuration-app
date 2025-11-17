@@ -11,16 +11,9 @@
 
             <!-- Subtitle -->
             <p class="text-gray-600 text-lg mb-10 leading-relaxed font-medium">
-                Follow this video guide to deploy your application.
+                Follow the deployment guide present in the GitHub repository to deploy your
+                application.
             </p>
-
-            <!-- Video -->
-            <!-- <video
-                src="/videos/deploying/Deploying.mp4"
-                controls
-                playsinline
-                class="w-full rounded-2xl shadow-md"
-            ></video> -->
 
             <!-- Action button -->
             <div class="mt-10">

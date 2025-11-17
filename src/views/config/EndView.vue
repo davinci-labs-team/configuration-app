@@ -97,7 +97,7 @@
                     rounded="xl"
                     class="px-12 text-lg font-bold shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
                 >
-                    Get Started
+                    Close Configuration
                 </v-btn>
             </div>
         </div>
@@ -109,6 +109,13 @@ const emit = defineEmits(["finish"]);
 
 const handleFinish = () => {
     emit("finish");
+    // Only try to close if this window was opened by a script
+    if (window.opener) {
+        window.close();
+    } else {
+        // Fallback for windows/tabs not opened by script: navigate to app root
+        window.location.replace("/");
+    }
 };
 </script>
 

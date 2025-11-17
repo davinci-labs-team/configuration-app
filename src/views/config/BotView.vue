@@ -11,16 +11,9 @@
 
             <!-- Subtitle -->
             <p class="text-gray-600 text-lg mb-10 leading-relaxed font-medium">
-                Follow this video guide to complete your Discord setup.
+                Follow the bot setup guide in the project's GitHub repository to quickly get your
+                bot up and running.
             </p>
-
-            <!-- Video -->
-            <!-- <video
-                    src="/videos/discord/DiscordSetup.mp4"
-                    controls
-                    playsinline
-                    class="w-full rounded-2xl shadow-md"
-                ></video> -->
 
             <!-- Action button -->
             <div class="mt-10">

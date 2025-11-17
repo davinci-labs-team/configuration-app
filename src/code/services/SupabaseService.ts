@@ -54,7 +54,8 @@ export default abstract class SupabaseService {
             lastname: "User",
             email: email,
             role: "ORGANIZER",
-            supabaseUserId: supabaseUserId
+            supabaseUserId: supabaseUserId,
+            id: supabaseUserId
         });
 
         if (insertError) {
