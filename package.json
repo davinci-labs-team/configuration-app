@@ -19,6 +19,7 @@
     "@mdi/font": "^7.4.47",
     "@supabase/supabase-js": "^2.58.0",
     "@tailwindcss/vite": "^4.1.13",
+    "jszip": "^3.10.1",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.13",
     "vee-validate": "^4.15.1",
