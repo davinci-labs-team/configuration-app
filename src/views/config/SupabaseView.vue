@@ -16,17 +16,9 @@
             <!-- Subtitle -->
             <p class="text-gray-600 text-lg mb-10 leading-relaxed font-medium">
                 Let's connect to your pre-configured supabase instance. Please enter your
-                credentials bellow. You can also follow the video.
+                credentials bellow. You can find the necessary information on how to find the
+                credentials on GitHub.
             </p>
-
-            <video
-                src="/videos/supabase/intro.mp4"
-                autoplay
-                muted
-                loop
-                playsinline
-                class="w-full mb-8 rounded-2xl shadow-md py-5"
-            ></video>
 
             <!-- Input fields -->
             <v-form @submit.prevent="submit">
