@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+    config-app:
+        image: ghcr.io/davinci-labs-team/configuration-app:1.0
+        container_name: configuration-app
+        ports:
+            - "8080:80"
+        restart: unless-stopped
+        environment:
+            - NODE_ENV=production
