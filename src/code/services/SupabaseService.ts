@@ -37,9 +37,8 @@ export default abstract class SupabaseService {
     public static async createAdminUser(email: string, password: string): Promise<boolean> {
         const supabaseStore = useSupabaseStore();
         const supabaseClient = supabaseStore.client!;
-        const { data, error } = await supabaseClient.auth.admin.createUser({
+        const { data, error } = await supabaseClient.auth.signUp({
             email: email,
-            email_confirm: true,
             password: password
         });
         if (error) {
